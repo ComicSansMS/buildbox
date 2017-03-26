@@ -7,7 +7,8 @@ import versions
 
 def call(args, cwd=os.getcwd()):
     p = subprocess.Popen(args, cwd=cwd)
-    p.wait()
+    if p.wait() != 0:
+        raise RuntimeError("Error in subprocess.")
 
 def initialize_directories(dirs):
     for d in dirs:
@@ -58,7 +59,7 @@ def build_sqlpp11(toolchain):
                    "-DCMAKE_INSTALL_PREFIX=" + install_dir, source_dir],
          cwd=build_dir)
     call(["cmake", "--build", build_dir, "--config", "Release"])
-    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "INSTALL"])
+    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
 
 def build_sqlpp11_connector_sqlite3(toolchain):
     cwd = os.getcwd()
@@ -77,7 +78,7 @@ def build_sqlpp11_connector_sqlite3(toolchain):
          cwd=build_dir)
     call(["cmake", "--build", build_dir, "--config", "Debug", "--target", "sqlpp11-connector-sqlite3"])
     call(["cmake", "--build", build_dir, "--config", "Release", "--target", "sqlpp11-connector-sqlite3"])
-    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "INSTALL"])
+    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
 
 
 
