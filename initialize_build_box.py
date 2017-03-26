@@ -34,14 +34,16 @@ def build_sqlite3(toolchain):
 
     cmake_generator = cmake_generator_for_toolchain(toolchain)
     call(["cmake", "-G", cmake_generator, source_dir], cwd=build_dir)
-    call(["cmake", "--build", build_dir, "--config", "Release"])
+    call(["cmake", "--build", build_dir, "--config", "Debug"])
+    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo"])
 
     os.makedirs(os.path.join(install_dir, "include"))
     shutil.copy(os.path.join(source_dir, "sqlite3.h"), os.path.join(install_dir, "include"))
     shutil.copy(os.path.join(source_dir, "sqlite3ext.h"), os.path.join(install_dir, "include"))
     os.makedirs(os.path.join(install_dir, "lib"))
     if(os.name == "nt"):
-        shutil.copy(os.path.join(build_dir, "Release", "sqlite3.lib"), os.path.join(install_dir, "lib"))
+        shutil.copy(os.path.join(build_dir, "Debug", "sqlite3d.lib"), os.path.join(install_dir, "lib"))
+        shutil.copy(os.path.join(build_dir, "RelWithDebInfo", "sqlite3.lib"), os.path.join(install_dir, "lib"))
     else:
         shutil.copy(os.path.join(build_dir, "libsqlite3.a"), os.path.join(install_dir, "lib"))
 
@@ -58,8 +60,8 @@ def build_sqlpp11(toolchain):
                    "-DENABLE_TESTS=OFF",
                    "-DCMAKE_INSTALL_PREFIX=" + install_dir, source_dir],
          cwd=build_dir)
-    call(["cmake", "--build", build_dir, "--config", "Release"])
-    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
+    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo"])
+    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "--target", "install"])
 
 def build_sqlpp11_connector_sqlite3(toolchain):
     cwd = os.getcwd()
@@ -77,8 +79,8 @@ def build_sqlpp11_connector_sqlite3(toolchain):
                    "-DCMAKE_INSTALL_PREFIX=" + install_dir, source_dir],
          cwd=build_dir)
     call(["cmake", "--build", build_dir, "--config", "Debug", "--target", "sqlpp11-connector-sqlite3"])
-    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "sqlpp11-connector-sqlite3"])
-    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
+    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "--target", "sqlpp11-connector-sqlite3"])
+    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "--target", "install"])
 
 def build_rapidjson(toolchain):
     cwd = os.getcwd()
