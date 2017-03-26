@@ -1,0 +1,9 @@
+[submodule "sqlpp11/src"]
+	path = sqlpp11/src
+	url = https://github.com/rbock/sqlpp11.git
+[submodule "sqlpp11-connector-sqlite3/src"]
+	path = sqlpp11-connector-sqlite3/src
+	url = https://github.com/rbock/sqlpp11-connector-sqlite3.git
+[submodule "date/src"]
+	path = date/src
+	url = https://github.com/HowardHinnant/date.git
