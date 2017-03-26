@@ -80,6 +80,28 @@ def build_sqlpp11_connector_sqlite3(toolchain):
     call(["cmake", "--build", build_dir, "--config", "Release", "--target", "sqlpp11-connector-sqlite3"])
     call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
 
+def build_rapidjson(toolchain):
+    cwd = os.getcwd()
+    source_dir = os.path.join(cwd, "rapidjson", "src")
+    build_dir = os.path.join(cwd, "rapidjson", "build");
+    install_dir = os.path.join(cwd, "rapidjson", "install")
+    initialize_directories([build_dir, install_dir])
+
+    cmake_generator = cmake_generator_for_toolchain(toolchain)
+    call(["cmake", "-G", cmake_generator,
+                   "-DBUILD_TESTING=OFF",
+                   "-DRAPIDJSON_BUILD_ASAN=OFF",
+                   "-DRAPIDJSON_BUILD_CXX11=ON",
+                   "-DRAPIDJSON_BUILD_DOC=OFF",
+                   "-DRAPIDJSON_BUILD_EXAMPLES=OFF",
+                   "-DRAPIDJSON_BUILD_TESTS=OFF",
+                   "-DRAPIDJSON_BUILD_THIRDPARTY_GTEST=OFF",
+                   "-DRAPIDJSON_BUILD_UBSAN=OFF",
+                   "-DRAPIDJSON_HAS_STDSTRING=ON",
+                   "-DCMAKE_INSTALL_PREFIX=" + install_dir, source_dir],
+         cwd=build_dir)
+    call(["cmake", "--build", build_dir, "--config", "Release"])
+    call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
 
 
 if os.name == "nt":
@@ -93,3 +115,4 @@ elif os.name == "posix":
 build_sqlite3(toolchain)
 build_sqlpp11(toolchain)
 build_sqlpp11_connector_sqlite3(toolchain)
+build_rapidjson(toolchain)
