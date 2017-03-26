@@ -7,3 +7,9 @@
 [submodule "date/src"]
 	path = date/src
 	url = https://github.com/HowardHinnant/date.git
+[submodule "cpprestsdk/src"]
+	path = cpprestsdk/src
+	url = https://github.com/Microsoft/cpprestsdk.git
+[submodule "rapidjson/src"]
+	path = rapidjson/src
+	url = https://github.com/miloyip/rapidjson.git
