@@ -13,3 +13,6 @@
 [submodule "rapidjson/src"]
 	path = rapidjson/src
 	url = https://github.com/miloyip/rapidjson.git
+[submodule "catch/src"]
+	path = catch/src
+	url = https://github.com/philsquared/Catch.git
