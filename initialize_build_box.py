@@ -1,8 +1,10 @@
 
+import hashlib
 import os
 import platform
 import shutil
 import subprocess
+import urllib.request
 import versions
 
 def call(args, cwd=os.getcwd()):
@@ -105,8 +107,21 @@ def build_rapidjson(toolchain):
     call(["cmake", "--build", build_dir, "--config", "Release"])
     call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
 
+def download_vswhere():
+    cwd = os.getcwd()
+    source_url = "https://github.com/Microsoft/vswhere/releases/download/2.2.13%2Bg0952074227/vswhere.exe"
+    source_md5 = "39f56924d03d2e18bbd0c8f0f4de3b4b"
+    target_path = os.path.join(cwd, "vswhere", "vswhere.exe")
+    if(not os.path.isfile(target_path)):
+        print("Downloading vswhere...")
+        urllib.request.urlretrieve(source_url, target_path)
+        hash = hashlib.md5(open(target_path, 'rb').read()).hexdigest()
+        if(hash != source_md5):
+            raise RuntimeError("Hash mismatch on downloaded vswhere (expected: " + source_md5 + ", got: " + hash)
+
 
 if os.name == "nt":
+    download_vswhere()
     toolchain = "Win64-MSVC14"
 elif os.name == "posix":
     if platform.system() == "Darwin":

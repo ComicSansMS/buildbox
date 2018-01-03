@@ -16,3 +16,6 @@
 [submodule "catch/src"]
 	path = catch/src
 	url = https://github.com/philsquared/Catch.git
+[submodule "ffmpeg"]
+	path = ffmpeg
+	url = https://git.ffmpeg.org/ffmpeg.git
