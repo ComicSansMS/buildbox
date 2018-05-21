@@ -74,7 +74,7 @@ def build_sqlpp11_connector_sqlite3(toolchain):
 
     cmake_generator = cmake_generator_for_toolchain(toolchain)
     call(["cmake", "-G", cmake_generator,
-                   "-DDATE_INCLUDE_DIR=" + os.path.join(cwd, "date", "src"),
+                   "-DHinnantDate_ROOT_DIR=" + os.path.join(cwd, "date", "src"),
                    "-DSQLPP11_INCLUDE_DIR=" + os.path.join(cwd, "sqlpp11", "install", "include"),
                    "-DSQLITE3_INCLUDE_DIR=" + os.path.join(cwd, "sqlite3", "install", "include"),
                    "-DSQLITE3_LIBRARY=" + os.path.join(cwd, "sqlite3", "install", "lib", ("sqlite3.lib" if toolchain == "Win64-MSVC14" else "libsqlite3.a")),
@@ -128,7 +128,19 @@ elif os.name == "posix":
     elif platform.system() == "Linux":
         toolchain = "Linux-Make"
 
+print("*******************************************************************************")
+print("***  SQLite3                                                                ***")
+print("*******************************************************************************")
 build_sqlite3(toolchain)
+print("*******************************************************************************")
+print("***  sqlpp11                                                                ***")
+print("*******************************************************************************")
 build_sqlpp11(toolchain)
+print("*******************************************************************************")
+print("***  sqlpp11-sqlite-connector                                               ***")
+print("*******************************************************************************")
 build_sqlpp11_connector_sqlite3(toolchain)
+print("*******************************************************************************")
+print("***  RapidJSON                                                              ***")
+print("*******************************************************************************")
 build_rapidjson(toolchain)
