@@ -115,10 +115,9 @@ def download_vswhere():
     if(not os.path.isfile(target_path)):
         print("Downloading vswhere...")
         urllib.request.urlretrieve(source_url, target_path)
-        hash = hashlib.md5(open(target_path, 'rb').read()).hexdigest()
-        if(hash != source_md5):
-            raise RuntimeError("Hash mismatch on downloaded vswhere (expected: " + source_md5 + ", got: " + hash)
-
+    hash = hashlib.md5(open(target_path, 'rb').read()).hexdigest()
+    if(hash != source_md5):
+        raise RuntimeError("Hash mismatch on downloaded vswhere (expected: " + source_md5 + ", got: " + hash)
 
 if os.name == "nt":
     download_vswhere()
