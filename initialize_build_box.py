@@ -1,6 +1,7 @@
 
 import hashlib
 import os
+import multiprocessing
 import platform
 import shutil
 import subprocess
@@ -20,7 +21,9 @@ def initialize_directories(dirs):
             os.makedirs(d)
 
 def cmake_generator_for_toolchain(toolchain):
-    if(toolchain == "Win64-MSVC14"):
+    if(toolchain == "Win64-MSVC15"):
+        return "Visual Studio 15 2017 Win64"
+    elif (toolchain == "Win64-MSVC14"):
         return "Visual Studio 14 2015 Win64"
     elif((toolchain == "MacOS-Make") or (toolchain == "Linux-Make")):
         return "Unix Makefiles"
@@ -62,7 +65,7 @@ def build_sqlpp11(toolchain):
                    "-DENABLE_TESTS=OFF",
                    "-DCMAKE_INSTALL_PREFIX=" + install_dir, source_dir],
          cwd=build_dir)
-    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo"])
+    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "-j", str(multiprocessing.cpu_count())])
     call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "--target", "install"])
 
 def build_sqlpp11_connector_sqlite3(toolchain):
@@ -77,11 +80,11 @@ def build_sqlpp11_connector_sqlite3(toolchain):
                    "-DHinnantDate_ROOT_DIR=" + os.path.join(cwd, "date", "src"),
                    "-DSQLPP11_INCLUDE_DIR=" + os.path.join(cwd, "sqlpp11", "install", "include"),
                    "-DSQLITE3_INCLUDE_DIR=" + os.path.join(cwd, "sqlite3", "install", "include"),
-                   "-DSQLITE3_LIBRARY=" + os.path.join(cwd, "sqlite3", "install", "lib", ("sqlite3.lib" if toolchain == "Win64-MSVC14" else "libsqlite3.a")),
+                   "-DSQLITE3_LIBRARY=" + os.path.join(cwd, "sqlite3", "install", "lib", ("sqlite3.lib" if toolchain.startswith("Win64-") else "libsqlite3.a")),
                    "-DCMAKE_INSTALL_PREFIX=" + install_dir, source_dir],
          cwd=build_dir)
-    call(["cmake", "--build", build_dir, "--config", "Debug", "--target", "sqlpp11-connector-sqlite3"])
-    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "--target", "sqlpp11-connector-sqlite3"])
+    call(["cmake", "--build", build_dir, "--config", "Debug", "--target", "sqlpp11-connector-sqlite3", "-j", str(multiprocessing.cpu_count())])
+    call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "--target", "sqlpp11-connector-sqlite3", "-j", str(multiprocessing.cpu_count())])
     call(["cmake", "--build", build_dir, "--config", "RelWithDebInfo", "--target", "install"])
 
 def build_rapidjson(toolchain):
@@ -104,7 +107,7 @@ def build_rapidjson(toolchain):
                    "-DRAPIDJSON_HAS_STDSTRING=ON",
                    "-DCMAKE_INSTALL_PREFIX=" + install_dir, source_dir],
          cwd=build_dir)
-    call(["cmake", "--build", build_dir, "--config", "Release"])
+    call(["cmake", "--build", build_dir, "--config", "Release", "-j", str(multiprocessing.cpu_count())])
     call(["cmake", "--build", build_dir, "--config", "Release", "--target", "install"])
 
 def download_vswhere():
@@ -121,12 +124,13 @@ def download_vswhere():
 
 if os.name == "nt":
     download_vswhere()
-    toolchain = "Win64-MSVC14"
+    toolchain = "Win64-MSVC15"
 elif os.name == "posix":
     if platform.system() == "Darwin":
         toolchain = "MacOS-Make"
     elif platform.system() == "Linux":
         toolchain = "Linux-Make"
+
 
 print("*******************************************************************************")
 print("***  SQLite3                                                                ***")
