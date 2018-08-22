@@ -1,0 +1,25 @@
+1. Install msys2:
+ - Extract .tar
+ - Run
+    pacman -Syuu
+   until no more updates are available. Restart shell in between runs.
+ - pacman -S diffutils make
+ - Edit msys2.ini to have
+    MSYS2_PATH_TYPE=inherit
+   set.
+
+2. Start MSVC command prompt.
+ - set MSYS2_PATH_TYPE=inherit
+ - Launch msys shell with
+    c:\msys64\msys2_shell.cmd
+ - cl should work.
+ - where link
+ - make sure msvc link is in path first
+ - make sure yasm is in path
+
+3. cd to ffmpeg directory
+ - ./configure --arch=amd64 --enable-asm --enable-x86asm --enable-shared --disable-static --toolchain=msvc --prefix=<install-prefix>
+ - this may take a while...
+ - make -j
+ - make install
+ - see also: https://trac.ffmpeg.org/wiki/CompilationGuide/MSVC
