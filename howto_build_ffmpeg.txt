@@ -1,9 +1,11 @@
+0. Prerequesites: Build and install yasm.
+
 1. Install msys2:
  - Extract .tar
  - Run
     pacman -Syuu
    until no more updates are available. Restart shell in between runs.
- - pacman -S diffutils make
+ - pacman -S diffutils make pkg-config
  - Edit msys2.ini to have
     MSYS2_PATH_TYPE=inherit
    set.
